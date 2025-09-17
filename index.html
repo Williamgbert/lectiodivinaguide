@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectio Divina Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .garamond { font-family: 'EB Garamond', serif; }
+        .inter { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.8s ease-in; }
+        .fade-out { animation: fadeOut 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .progress-bar { transition: width 0.6s ease-in-out; }
+        .breathing { animation: breathe 4s ease-in-out infinite; }
+        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 text-slate-800 transition-all duration-500">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="garamond text-4xl md:text-5xl font-medium text-amber-900 mb-2">Lectio Divina</h1>
+            <p class="inter text-slate-600 text-lg">Sacred Reading • Divine Meditation</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div id="progressContainer" class="hidden mb-8">
+            <div class="flex justify-between items-center mb-2">
+                <span class="inter text-sm text-slate-500">Progress</span>
+                <span id="stageIndicator" class="inter text-sm text-slate-500">Stage 1 of 4</span>
+            </div>
+            <div class="w-full bg-amber-100 rounded-full h-2">
+                <div id="progressBar" class="progress-bar bg-gradient-to-r from-amber-400 to-orange-400 h-2 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="text-center fade-in">
+            <div class="max-w-2xl mx-auto">
+                <div class="mb-8">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-amber-200 to-orange-200 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">📖</span>
+                    </div>
+                    <h2 class="garamond text-3xl font-medium text-amber-900 mb-4">Welcome to Sacred Reading</h2>
+                    <p class="inter text-slate-600 text-lg leading-relaxed mb-8">
+                        Lectio Divina is an ancient practice of prayerful Scripture reading. 
+                        You'll be gently guided through four stages: Read, Reflect, Pray, and Rest.
+                    </p>
+                </div>
+
+                <div class="mb-8">
+                    <label class="inter text-sm font-medium text-slate-700 block mb-3">Choose a Scripture theme:</label>
+                    <select id="themeSelect" class="inter w-full max-w-xs mx-auto px-4 py-3 bg-white border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-300 focus:border-transparent">
+                        <option value="peace">Peace & Comfort</option>
+                        <option value="love">Love & Grace</option>
+                        <option value="strength">Strength & Courage</option>
+                        <option value="wisdom">Wisdom & Guidance</option>
+                        <option value="hope">Hope & Future</option>
+                        <option value="faith">Faith & Trust</option>
+                        <option value="forgiveness">Forgiveness & Mercy</option>
+                        <option value="random">Surprise Me</option>
+                    </select>
+                </div>
+
+                <button id="beginBtn" class="inter bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-4 rounded-lg font-medium text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    Begin Sacred Reading
+                </button>
+            </div>
+        </div>
+
+        <!-- Stage 1: Lectio (Read) -->
+        <div id="stage1" class="hidden text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="garamond text-3xl font-medium text-amber-900 mb-2">Lectio</h2>
+                <p class="inter text-slate-600 mb-8">Read • Listen • Receive</p>
+                
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg mb-8">
+                    <div id="scriptureText" class="garamond text-lg md:text-xl lg:text-2xl leading-relaxed text-slate-800 mb-6"></div>
+                    <div id="scriptureRef" class="inter text-sm md:text-base text-slate-500 font-medium"></div>
+                </div>
+
+                <div class="mb-8">
+                    <p class="inter text-slate-600 mb-4">Read this passage slowly, perhaps multiple times. Let the words settle in your heart.</p>
+                    <button id="readAgainBtn" class="inter text-amber-600 hover:text-amber-700 underline">Read Again</button>
+                </div>
+
+                <button id="nextStage1" class="inter bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300">
+                    Continue to Reflect
+                </button>
+            </div>
+        </div>
+
+        <!-- Stage 2: Meditatio (Reflect) -->
+        <div id="stage2" class="hidden text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="garamond text-3xl font-medium text-amber-900 mb-2">Meditatio</h2>
+                <p class="inter text-slate-600 mb-8">Reflect • Ponder • Meditate</p>
+                
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg mb-8">
+                    <div class="mb-6">
+                        <h3 class="inter text-lg md:text-xl font-medium text-slate-700 mb-4">Reflection Prompts</h3>
+                        <div id="reflectionPrompts" class="space-y-3 md:space-y-4 text-left">
+                            <p class="garamond text-base md:text-lg text-slate-700">• What word or phrase draws your attention?</p>
+                            <p class="garamond text-base md:text-lg text-slate-700">• What is God saying to you through this passage?</p>
+                            <p class="garamond text-base md:text-lg text-slate-700">• How does this Scripture speak to your current situation?</p>
+                        </div>
+                    </div>
+                    
+                    <textarea id="reflectionNotes" placeholder="Write your reflections here (optional)..." 
+                        class="inter w-full h-32 md:h-36 p-3 md:p-4 text-sm md:text-base border border-amber-200 rounded-lg resize-none focus:ring-2 focus:ring-amber-300 focus:border-transparent bg-amber-50/50"></textarea>
+                </div>
+
+                <button id="nextStage2" class="inter bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300">
+                    Continue to Prayer
+                </button>
+            </div>
+        </div>
+
+        <!-- Stage 3: Oratio (Pray) -->
+        <div id="stage3" class="hidden text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="garamond text-3xl font-medium text-amber-900 mb-2">Oratio</h2>
+                <p class="inter text-slate-600 mb-8">Pray • Respond • Converse</p>
+                
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg mb-8">
+                    <div class="mb-6">
+                        <h3 class="inter text-lg md:text-xl font-medium text-slate-700 mb-4">Prayer Invitation</h3>
+                        <p class="garamond text-base md:text-lg text-slate-700 leading-relaxed mb-6">
+                            Now speak with God about what you've discovered. Share your thoughts, feelings, 
+                            questions, or gratitude. This is your conversation with the Divine.
+                        </p>
+                    </div>
+                    
+                    <textarea id="prayerNotes" placeholder="Write your prayer or simply pray silently..." 
+                        class="inter w-full h-32 md:h-36 p-3 md:p-4 text-sm md:text-base border border-amber-200 rounded-lg resize-none focus:ring-2 focus:ring-amber-300 focus:border-transparent bg-amber-50/50"></textarea>
+                </div>
+
+                <button id="nextStage3" class="inter bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300">
+                    Continue to Rest
+                </button>
+            </div>
+        </div>
+
+        <!-- Stage 4: Contemplatio (Rest) -->
+        <div id="stage4" class="hidden text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="garamond text-3xl font-medium text-amber-900 mb-2">Contemplatio</h2>
+                <p class="inter text-slate-600 mb-8">Rest • Be Still • Abide</p>
+                
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg mb-8">
+                    <div id="timerSetup" class="mb-6">
+                        <h3 class="inter text-lg md:text-xl font-medium text-slate-700 mb-4">Silent Rest</h3>
+                        <p class="garamond text-base md:text-lg text-slate-700 leading-relaxed mb-6">
+                            Rest in God's presence. Let go of words and thoughts. Simply be.
+                        </p>
+                        
+                        <div class="mb-6">
+                            <label class="inter text-sm md:text-base font-medium text-slate-700 block mb-2">Duration:</label>
+                            <select id="timerDuration" class="inter w-full max-w-xs mx-auto px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-300">
+                                <option value="60">1 minute</option>
+                                <option value="180">3 minutes</option>
+                                <option value="300" selected>5 minutes</option>
+                                <option value="600">10 minutes</option>
+                            </select>
+                        </div>
+                        
+                        <button id="startTimer" class="inter bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3 rounded-lg font-medium text-sm md:text-base transition-all duration-300">
+                            Begin Silent Rest
+                        </button>
+                    </div>
+
+                    <div id="timerActive" class="hidden">
+                        <div class="breathing w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-amber-300 to-orange-300 rounded-full flex items-center justify-center">
+                            <span class="text-xl md:text-2xl">🕊️</span>
+                        </div>
+                        <div id="timeRemaining" class="garamond text-3xl md:text-4xl font-medium text-amber-900 mb-4">5:00</div>
+                        <p class="inter text-sm md:text-base text-slate-600 mb-6">Rest in silence...</p>
+                        <button id="endTimer" class="inter text-sm md:text-base text-amber-600 hover:text-amber-700 underline">End Early</button>
+                    </div>
+
+                    <div id="timerComplete" class="hidden">
+                        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-green-300 to-emerald-300 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">✨</span>
+                        </div>
+                        <h3 class="garamond text-2xl font-medium text-amber-900 mb-4">Peace be with you</h3>
+                        <p class="inter text-slate-600 mb-6">Your time of sacred reading is complete.</p>
+                    </div>
+                </div>
+
+                <div id="finalButtons" class="hidden flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                    <button id="saveReflection" class="inter bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium text-sm md:text-base transition-all duration-300">
+                        Save Reflection
+                    </button>
+                    <button id="startOver" class="inter bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-medium text-sm md:text-base transition-all duration-300">
+                        Begin Again
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Reflections -->
+        <div id="reflectionsView" class="hidden">
+            <div class="max-w-3xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="garamond text-3xl font-medium text-amber-900">Past Reflections</h2>
+                    <button id="backToWelcome" class="inter text-amber-600 hover:text-amber-700 underline">← Back</button>
+                </div>
+                <div id="reflectionsList" class="space-y-6"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 pt-8 border-t border-amber-200">
+            <button id="viewReflections" class="inter text-amber-600 hover:text-amber-700 underline mb-4">View Past Reflections</button>
+            <p class="inter text-sm text-slate-500">
+                "Be still and know that I am God" - Psalm 46:10
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Extensive Scripture passages organized by theme
+        const scriptures = {
+            peace: [
+                { text: "Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid.", ref: "John 14:27" },
+                { text: "Be still, and know that I am God; I will be exalted among the nations, I will be exalted in the earth.", ref: "Psalm 46:10" },
+                { text: "And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus.", ref: "Philippians 4:7" },
+                { text: "You will keep in perfect peace those whose minds are steadfast, because they trust in you.", ref: "Isaiah 26:3" },
+                { text: "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you; the Lord turn his face toward you and give you peace.", ref: "Numbers 6:24-26" },
+                { text: "Come to me, all you who are weary and burdened, and I will give you rest.", ref: "Matthew 11:28" },
+                { text: "Cast all your anxiety on him because he cares for you.", ref: "1 Peter 5:7" },
+                { text: "Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.", ref: "Philippians 4:6" },
+                { text: "The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you; in his love he will no longer rebuke you, but will rejoice over you with singing.", ref: "Zephaniah 3:17" },
+                { text: "He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul.", ref: "Psalm 23:2-3" },
+                { text: "In peace I will lie down and sleep, for you alone, Lord, make me dwell in safety.", ref: "Psalm 4:8" },
+                { text: "Great peace have those who love your law, and nothing can make them stumble.", ref: "Psalm 119:165" }
+            ],
+            love: [
+                { text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", ref: "John 3:16" },
+                { text: "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", ref: "1 Corinthians 13:4" },
+                { text: "See what great love the Father has lavished on us, that we should be called children of God! And that is what we are!", ref: "1 John 3:1" },
+                { text: "But God demonstrates his own love for us in this: While we were still sinners, Christ died for us.", ref: "Romans 5:8" },
+                { text: "Dear friends, let us love one another, for love comes from God. Everyone who loves has been born of God and knows God.", ref: "1 John 4:7" },
+                { text: "Above all, love each other deeply, because love covers over a multitude of sins.", ref: "1 Peter 4:8" },
+                { text: "And now these three remain: faith, hope and love. But the greatest of these is love.", ref: "1 Corinthians 13:13" },
+                { text: "This is how God showed his love among us: He sent his one and only Son into the world that we might live through him.", ref: "1 John 4:9" },
+                { text: "As the Father has loved me, so have I loved you. Now remain in my love.", ref: "John 15:9" },
+                { text: "We love because he first loved us.", ref: "1 John 4:19" },
+                { text: "Love does not delight in evil but rejoices with the truth. It always protects, always trusts, always hopes, always perseveres.", ref: "1 Corinthians 13:6-7" },
+                { text: "How great is the love the Father has lavished on us, that we should be called children of God!", ref: "1 John 3:1" }
+            ],
+            strength: [
+                { text: "I can do all this through him who gives me strength.", ref: "Philippians 4:13" },
+                { text: "The Lord is my strength and my shield; my heart trusts in him, and he helps me.", ref: "Psalm 28:7" },
+                { text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.", ref: "Isaiah 40:31" },
+                { text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref: "Joshua 1:9" },
+                { text: "The Lord your God is with you, the Mighty Warrior who saves.", ref: "Zephaniah 3:17" },
+                { text: "My grace is sufficient for you, for my power is made perfect in weakness.", ref: "2 Corinthians 12:9" },
+                { text: "Finally, be strong in the Lord and in his mighty power.", ref: "Ephesians 6:10" },
+                { text: "God is our refuge and strength, an ever-present help in trouble.", ref: "Psalm 46:1" },
+                { text: "The Lord is my rock, my fortress and my deliverer; my God is my rock, in whom I take refuge.", ref: "Psalm 18:2" },
+                { text: "He gives strength to the weary and increases the power of the weak.", ref: "Isaiah 40:29" },
+                { text: "When I am afraid, I put my trust in you.", ref: "Psalm 56:3" },
+                { text: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref: "Joshua 1:9" }
+            ],
+            wisdom: [
+                { text: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.", ref: "Proverbs 3:5-6" },
+                { text: "If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault, and it will be given to you.", ref: "James 1:5" },
+                { text: "The fear of the Lord is the beginning of wisdom, and knowledge of the Holy One is understanding.", ref: "Proverbs 9:10" },
+                { text: "For the Lord gives wisdom; from his mouth come knowledge and understanding.", ref: "Proverbs 2:6" },
+                { text: "The simple believe anything, but the prudent give thought to their steps.", ref: "Proverbs 14:15" },
+                { text: "Plans fail for lack of counsel, but with many advisers they succeed.", ref: "Proverbs 15:22" },
+                { text: "Commit to the Lord whatever you do, and he will establish your plans.", ref: "Proverbs 16:3" },
+                { text: "In their hearts humans plan their course, but the Lord establishes their steps.", ref: "Proverbs 16:9" },
+                { text: "How much better to get wisdom than gold, to get insight rather than silver!", ref: "Proverbs 16:16" },
+                { text: "The heart of the discerning acquires knowledge, for the ears of the wise seek it out.", ref: "Proverbs 18:15" },
+                { text: "Listen to advice and accept discipline, and at the end you will be counted among the wise.", ref: "Proverbs 19:20" },
+                { text: "Your word is a lamp for my feet, a light on my path.", ref: "Psalm 119:105" }
+            ],
+            hope: [
+                { text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", ref: "Jeremiah 29:11" },
+                { text: "May the God of hope fill you with all joy and peace as you trust in him, so that you may overflow with hope by the power of the Holy Spirit.", ref: "Romans 15:13" },
+                { text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles.", ref: "Isaiah 40:31" },
+                { text: "Why, my soul, are you downcast? Why so disturbed within me? Put your hope in God, for I will yet praise him, my Savior and my God.", ref: "Psalm 42:11" },
+                { text: "Be joyful in hope, patient in affliction, faithful in prayer.", ref: "Romans 12:12" },
+                { text: "Let us hold unswervingly to the hope we profess, for he who promised is faithful.", ref: "Hebrews 10:23" },
+                { text: "We have this hope as an anchor for the soul, firm and secure.", ref: "Hebrews 6:19" },
+                { text: "And we know that in all things God works for the good of those who love him.", ref: "Romans 8:28" }
+            ],
+            faith: [
+                { text: "Now faith is confidence in what we hope for and assurance about what we do not see.", ref: "Hebrews 11:1" },
+                { text: "And without faith it is impossible to please God, because anyone who comes to him must believe that he exists and that he rewards those who earnestly seek him.", ref: "Hebrews 11:6" },
+                { text: "Truly I tell you, if you have faith as small as a mustard seed, you can say to this mountain, 'Move from here to there,' and it will move.", ref: "Matthew 17:20" },
+                { text: "For we live by faith, not by sight.", ref: "2 Corinthians 5:7" },
+                { text: "Consequently, faith comes from hearing the message, and the message is heard through the word about Christ.", ref: "Romans 10:17" },
+                { text: "Fight the good fight of the faith. Take hold of the eternal life to which you were called.", ref: "1 Timothy 6:12" },
+                { text: "I have fought the good fight, I have finished the race, I have kept the faith.", ref: "2 Timothy 4:7" },
+                { text: "Therefore, since we have been justified through faith, we have peace with God through our Lord Jesus Christ.", ref: "Romans 5:1" }
+            ],
+            forgiveness: [
+                { text: "If we confess our sins, he is faithful and just and will forgive us our sins and purify us from all unrighteousness.", ref: "1 John 1:9" },
+                { text: "Be kind and compassionate to one another, forgiving each other, just as in Christ God forgave you.", ref: "Ephesians 4:32" },
+                { text: "Then Peter came to Jesus and asked, 'Lord, how many times shall I forgive my brother or sister who sins against me? Up to seven times?' Jesus answered, 'Not seven times, but seventy-seven times.'", ref: "Matthew 18:21-22" },
+                { text: "As far as the east is from the west, so far has he removed our transgressions from us.", ref: "Psalm 103:12" },
+                { text: "In him we have redemption through his blood, the forgiveness of sins, in accordance with the riches of God's grace.", ref: "Ephesians 1:7" },
+                { text: "Bear with each other and forgive one another if any of you has a grievance against someone. Forgive as the Lord forgave you.", ref: "Colossians 3:13" },
+                { text: "I, even I, am he who blots out your transgressions, for my own sake, and remembers your sins no more.", ref: "Isaiah 43:25" }
+            ]
+        };
+
+        let currentStage = 0;
+        let currentScripture = null;
+        let timer = null;
+        let timeLeft = 0;
+
+        // DOM elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const stageIndicator = document.getElementById('stageIndicator');
+        const stages = [
+            document.getElementById('stage1'),
+            document.getElementById('stage2'),
+            document.getElementById('stage3'),
+            document.getElementById('stage4')
+        ];
+
+        // Initialize app
+        document.getElementById('beginBtn').addEventListener('click', startLectioDivina);
+        document.getElementById('readAgainBtn').addEventListener('click', displayScripture);
+        document.getElementById('nextStage1').addEventListener('click', () => goToStage(2));
+        document.getElementById('nextStage2').addEventListener('click', () => goToStage(3));
+        document.getElementById('nextStage3').addEventListener('click', () => goToStage(4));
+        document.getElementById('startTimer').addEventListener('click', startSilentTimer);
+        document.getElementById('endTimer').addEventListener('click', endTimer);
+        document.getElementById('startOver').addEventListener('click', resetApp);
+        document.getElementById('saveReflection').addEventListener('click', saveCurrentReflection);
+        document.getElementById('viewReflections').addEventListener('click', showReflections);
+        document.getElementById('backToWelcome').addEventListener('click', resetApp);
+
+        function startLectioDivina() {
+            const theme = document.getElementById('themeSelect').value;
+            selectScripture(theme);
+            
+            welcomeScreen.classList.add('fade-out');
+            setTimeout(() => {
+                welcomeScreen.classList.add('hidden');
+                progressContainer.classList.remove('hidden');
+                goToStage(1);
+            }, 500);
+        }
+
+        function selectScripture(theme) {
+            let passages;
+            if (theme === 'random') {
+                const allPassages = Object.values(scriptures).flat();
+                passages = allPassages;
+            } else {
+                passages = scriptures[theme];
+            }
+            
+            const randomIndex = Math.floor(Math.random() * passages.length);
+            currentScripture = passages[randomIndex];
+        }
+
+        function goToStage(stageNum) {
+            // Hide all stages
+            stages.forEach(stage => {
+                if (stage && !stage.classList.contains('hidden')) {
+                    stage.classList.add('fade-out');
+                    setTimeout(() => {
+                        stage.classList.add('hidden');
+                        stage.classList.remove('fade-out');
+                    }, 300);
+                }
+            });
+
+            // Update progress
+            currentStage = stageNum;
+            const progress = (stageNum / 4) * 100;
+            progressBar.style.width = progress + '%';
+            stageIndicator.textContent = `Stage ${stageNum} of 4`;
+
+            // Show new stage
+            setTimeout(() => {
+                const newStage = stages[stageNum - 1];
+                if (newStage) {
+                    newStage.classList.remove('hidden');
+                    newStage.classList.add('fade-in');
+                    
+                    if (stageNum === 1) {
+                        displayScripture();
+                    }
+                }
+            }, 300);
+        }
+
+        function displayScripture() {
+            if (currentScripture) {
+                document.getElementById('scriptureText').textContent = currentScripture.text;
+                document.getElementById('scriptureRef').textContent = currentScripture.ref;
+            }
+        }
+
+        function startSilentTimer() {
+            const duration = parseInt(document.getElementById('timerDuration').value);
+            timeLeft = duration;
+            
+            document.getElementById('timerSetup').classList.add('hidden');
+            document.getElementById('timerActive').classList.remove('hidden');
+            
+            updateTimerDisplay();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    endTimer();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timeRemaining').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function endTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+            
+            document.getElementById('timerActive').classList.add('hidden');
+            document.getElementById('timerComplete').classList.remove('hidden');
+            document.getElementById('finalButtons').classList.remove('hidden');
+        }
+
+        function saveCurrentReflection() {
+            const reflection = {
+                date: new Date().toLocaleDateString(),
+                scripture: currentScripture,
+                reflection: document.getElementById('reflectionNotes').value,
+                prayer: document.getElementById('prayerNotes').value
+            };
+            
+            let savedReflections = JSON.parse(localStorage.getItem('lectioDivinaReflections') || '[]');
+            savedReflections.unshift(reflection);
+            localStorage.setItem('lectioDivinaReflections', JSON.stringify(savedReflections));
+            
+            alert('Your reflection has been saved! 🙏');
+        }
+
+        function showReflections() {
+            const savedReflections = JSON.parse(localStorage.getItem('lectioDivinaReflections') || '[]');
+            const reflectionsList = document.getElementById('reflectionsList');
+            
+            // Hide all other screens
+            document.querySelectorAll('[id$="Screen"], [id^="stage"]').forEach(el => el.classList.add('hidden'));
+            progressContainer.classList.add('hidden');
+            
+            if (savedReflections.length === 0) {
+                reflectionsList.innerHTML = '<p class="inter text-slate-600 text-center">No reflections saved yet. Begin your first Lectio Divina session!</p>';
+            } else {
+                reflectionsList.innerHTML = savedReflections.map(r => `
+                    <div class="bg-white/70 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-lg">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2">
+                            <h3 class="garamond text-lg md:text-xl font-medium text-amber-900">${r.scripture.ref}</h3>
+                            <span class="inter text-xs md:text-sm text-slate-500">${r.date}</span>
+                        </div>
+                        <p class="garamond text-sm md:text-base lg:text-lg text-slate-700 mb-4 italic leading-relaxed">"${r.scripture.text}"</p>
+                        ${r.reflection ? `<div class="mb-3"><h4 class="inter text-sm md:text-base font-medium text-slate-700 mb-2">Reflection:</h4><p class="inter text-sm md:text-base text-slate-600 leading-relaxed">${r.reflection}</p></div>` : ''}
+                        ${r.prayer ? `<div><h4 class="inter text-sm md:text-base font-medium text-slate-700 mb-2">Prayer:</h4><p class="inter text-sm md:text-base text-slate-600 leading-relaxed">${r.prayer}</p></div>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('reflectionsView').classList.remove('hidden');
+        }
+
+        function resetApp() {
+            // Clear timer if running
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+            
+            // Reset all form fields
+            document.getElementById('reflectionNotes').value = '';
+            document.getElementById('prayerNotes').value = '';
+            document.getElementById('timerDuration').value = '300';
+            
+            // Reset timer displays
+            document.getElementById('timerSetup').classList.remove('hidden');
+            document.getElementById('timerActive').classList.add('hidden');
+            document.getElementById('timerComplete').classList.add('hidden');
+            document.getElementById('finalButtons').classList.add('hidden');
+            
+            // Hide all screens
+            document.querySelectorAll('[id$="Screen"], [id^="stage"], #reflectionsView').forEach(el => el.classList.add('hidden'));
+            progressContainer.classList.add('hidden');
+            
+            // Show welcome screen
+            welcomeScreen.classList.remove('hidden', 'fade-out');
+            welcomeScreen.classList.add('fade-in');
+            
+            currentStage = 0;
+            currentScripture = null;
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9808e9b147a4afa4',t:'MTc1ODExNTM1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
